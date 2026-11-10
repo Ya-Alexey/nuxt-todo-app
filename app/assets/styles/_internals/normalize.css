@@ -30,7 +30,7 @@ body {
   margin: 0;
   font-family: var(--font-family);
   color: var(--n100);
-  background-color: #fff;
+  background-color: var(--n-00);
   font-size: 100%;
 }
 
