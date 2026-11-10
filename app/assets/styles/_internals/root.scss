@@ -1,0 +1,14 @@
+@use '../function' as *;
+
+:root {
+  --base-duration: 0.3s;
+  --base-timing: ease-in-out;
+  --font-family: 'Roboto', sans-serif;
+
+  --n-100: #515a6b;
+
+  --a-1: #0072ff;
+
+  --z-base-popup: 15;
+  --z-layout-sticky: 5;
+}

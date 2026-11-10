@@ -1,0 +1,59 @@
+@use 'sass:list';
+@use 'sass:map';
+
+$breakpoints: (
+  'min480': 'only screen and (min-width: 480px)',
+  'min640': 'only screen and (min-width: 640px)',
+  'min800': 'only screen and (min-width: 800px)',
+  'min1000': 'only screen and (min-width: 1000px)',
+  'min1200': 'only screen and (min-width: 1200px)',
+);
+
+/// Установка однотипных по длительнести и тайменгу анимаций
+/// @example scss
+/// .button {
+///   @include transition-default(background-color, color, transform);
+/// }
+///
+@mixin transition-default($properties...) {
+  $transitions: ();
+  @each $prop in $properties {
+    // Накапливаем строку: свойство + переменные длительности и тайминга
+    $transitions: list.append(
+      $transitions,
+      $prop var(--base-duration) var(--base-timing),
+      comma
+    );
+  }
+  transition: $transitions;
+}
+
+/// Для медиа выражений
+/// @example scss
+/// .box {
+///   width: 100%;
+///   @include media("min1000") {
+///      width: 50%;
+///   }
+/// }
+@mixin media($name) {
+  @media #{map.get($breakpoints, $name)} {
+    @content;
+  }
+}
+
+@mixin mediaHover() {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin reset-btn() {
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  text-decoration: none;
+}
