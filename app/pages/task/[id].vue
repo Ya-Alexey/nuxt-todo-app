@@ -1,0 +1,9 @@
+<template>
+  <div>TASK PAGE {{ route.params.id }}</div>
+</template>
+
+<script lang="ts" setup>
+const route = useRoute();
+</script>
+
+<style></style>

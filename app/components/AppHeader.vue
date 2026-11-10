@@ -28,6 +28,7 @@
   z-index: var(--z-layout-sticky);
   background-color: var(--n-10);
   box-shadow: 0 1px 2px #3f7ac233;
+  border-radius: 0 0 8px 8px;
   &__link {
     width: 32px;
     height: 32px;
@@ -37,8 +38,7 @@
     font-size: 22px;
   }
   &__svg {
-    fill: var(--a-1);
+    fill: var(--a-10);
   }
 }
 </style>
-nuxt-todo-app

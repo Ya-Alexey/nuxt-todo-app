@@ -29,6 +29,7 @@ const currentYear = new Date().getFullYear();
   padding: 16px;
   background-color: var(--n-10);
   box-shadow: 0 -1px 2px #3f7ac233;
+  border-radius: 8px 8px 0 0;
   &__text {
     margin: 0;
     font-size: 18px;

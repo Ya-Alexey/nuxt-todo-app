@@ -17,7 +17,7 @@
   width: 100%;
   margin: 0 auto;
   &__main {
-    padding: 16px;
+    padding: 8px;
     display: grid;
     grid-template-columns: minmax(0px, 1fr);
     grid-template-rows: 1fr;
