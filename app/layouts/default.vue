@@ -8,6 +8,12 @@
   </div>
 </template>
 
+<script lang="ts" setup>
+const router = useRouter();
+const { handleRouteChange } = useOverlayManager();
+router.afterEach(handleRouteChange);
+</script>
+
 <style lang="scss" scoped>
 .app-layout {
   display: grid;

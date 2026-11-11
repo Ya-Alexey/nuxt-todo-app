@@ -7,6 +7,7 @@
         v-for="point in task.list"
         :key="point.id"
         :is-disabled="true"
+        :point="point"
       />
     </div>
 
@@ -15,7 +16,7 @@
         theme="action"
         tag="NuxtLink"
         :to="{
-          name: 'task-id',
+          name: PAGE_TASK_ID,
           params: {
             id: task.id,
           },
@@ -26,12 +27,27 @@
         </template>
         Редактировать
       </BaseBtn>
-      <BaseBtn theme="danger">
+
+      <BaseBtn
+        theme="danger"
+        @click="toggleConfirm(true)"
+      >
         <template #icon>
           <SvgIcon name="delete" />
         </template>
         Удалить
       </BaseBtn>
+
+      <Transition name="base-fade">
+        <LazyConfirmModal
+          v-if="isShowConfirm"
+          :is-active="isShowConfirm"
+          @update:is-active="toggleConfirm"
+          @success="$emit('removeTask')"
+        >
+          Вы действительно хотите удалить задачку?
+        </LazyConfirmModal>
+      </Transition>
     </div>
   </div>
 </template>
@@ -40,10 +56,19 @@
 defineProps<{
   task: Task;
 }>();
+
+defineEmits<{
+  removeTask: [];
+}>();
+
+const { isActive: isShowConfirm, toggleState: toggleConfirm } =
+  useActiveState();
 </script>
 
 <style lang="scss" scoped>
 .task-card {
+  display: flex;
+  flex-direction: column;
   padding: 16px 8px;
   border-radius: 8px;
   border: 1px solid var(--n-20);
@@ -57,8 +82,8 @@ defineProps<{
     row-gap: 8px;
   }
   &__controls {
+    margin-top: auto;
     padding-top: 16px;
-
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 12px;

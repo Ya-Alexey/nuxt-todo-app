@@ -4,11 +4,13 @@
       <Title>Nuxt Todo App</Title>
     </Head>
 
+    <div class="main-page__title">{{ pageTitle }}</div>
     <div class="main-page__grid">
       <TaskCard
-        v-for="task in taskList"
+        v-for="(task, idx) in taskList"
         :key="task.id"
         :task="task"
+        @remove-task="removeTask(idx)"
       />
     </div>
 
@@ -16,65 +18,37 @@
       <BaseBtn
         class="main-page__create"
         theme="action"
+        @click="createTask()"
       >
         <template #icon>
           <SvgIcon name="add" />
         </template>
-        Создать TODO-шечку
+        Создать задачку
       </BaseBtn>
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
-const taskList: Task[] = [
-  {
-    id: 'task-1',
-    title: 'Подготовка к недельному спринту',
-    status: 'saved',
-    list: [
-      { id: 'tp-1-1', title: 'Провести ревью бэклога', checked: true },
-      { id: 'tp-1-2', title: 'Сформировать цели спринта', checked: true },
-      { id: 'tp-1-3', title: 'Распределить задачи по команде', checked: false },
-    ],
-  },
-  {
-    id: 'task-2',
-    title: 'Запуск рекламной кампании',
-    status: 'saved',
-    list: [
-      {
-        id: 'tp-2-1',
-        title: 'Согласовать бюджет с финдиректором',
-        checked: true,
-      },
-      { id: 'tp-2-2', title: 'Утвердить баннеры у дизайнера', checked: false },
-      {
-        id: 'tp-2-3',
-        title: 'Настроить таргетинг в личном кабинете',
-        checked: false,
-      },
-      { id: 'tp-2-4', title: 'Запустить тестовый показ', checked: false },
-    ],
-  },
-  {
-    id: 'task-3',
-    title: 'Обновление документации проекта',
-    status: 'saved',
-    list: [
-      {
-        id: 'tp-3-1',
-        title: 'Дописать README.md для нового модуля',
-        checked: true,
-      },
-      {
-        id: 'tp-3-2',
-        title: 'Обновить схему базы данных в Miro',
-        checked: true,
-      },
-    ],
-  },
-];
+const router = useRouter();
+const taskStore = useTaskStore();
+const { tasks: taskList } = storeToRefs(taskStore);
+const { removeTask, addTask } = taskStore;
+
+const pageTitle = computed(() => {
+  if (taskList.value.length > 0) {
+    return 'Списочек ваших задачек:';
+  }
+  return 'У вас нет задачек';
+});
+
+function createTask() {
+  const { id } = addTask();
+  router.push({
+    name: PAGE_TASK_ID,
+    params: { id },
+  });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -84,16 +58,20 @@ const taskList: Task[] = [
     padding-top: 12px;
     padding-bottom: 12px;
   }
+  &__title {
+    margin: 16px 0 24px;
+    font-size: 22px;
+  }
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
+    gap: 24px;
     @include media('min800') {
-      gap: 20px;
+      gap: 28px;
       grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
     }
     @include media('min1000') {
-      gap: 24px;
+      gap: 32px;
       grid-template-columns: repeat(auto-fill, minmax(470px, 1fr));
     }
   }

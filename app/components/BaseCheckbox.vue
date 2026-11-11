@@ -22,8 +22,9 @@
 </template>
 
 <script lang="ts" setup>
-const { isDisabled = false } = defineProps<{
+const { isDisabled = false, isShortView = true } = defineProps<{
   isDisabled?: boolean;
+  isShortView?: boolean;
 }>();
 
 const checked = defineModel<boolean>({
@@ -33,6 +34,7 @@ const checked = defineModel<boolean>({
 const classes = computed(() => ({
   'base-checkbox--is-checked': checked.value,
   'base-checkbox--is-disabled': isDisabled,
+  'base-checkbox--is-short': isShortView,
 }));
 </script>
 
@@ -56,6 +58,14 @@ const classes = computed(() => ({
   &--is-checked {
     .base-checkbox__mark {
       opacity: 1;
+    }
+  }
+  &--is-short {
+    overflow: hidden;
+    .base-checkbox__label {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
   &.base-checkbox--is-disabled {

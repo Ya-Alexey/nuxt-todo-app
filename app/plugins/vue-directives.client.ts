@@ -1,0 +1,9 @@
+import { vAutofocus } from '~/directives/vAutofocus';
+
+export default defineNuxtPlugin({
+  name: 'vueDirectives',
+  parallel: true,
+  setup(nuxtApp) {
+    nuxtApp.vueApp.directive('autofocus', vAutofocus);
+  },
+});

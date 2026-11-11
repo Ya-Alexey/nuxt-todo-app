@@ -6,7 +6,7 @@
       aria-label="главная"
     >
       <SvgIcon
-        name="target"
+        :name="linkIcon"
         class="app-header__svg"
       />
     </NuxtLink>
@@ -15,7 +15,10 @@
   </header>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const route = useRoute();
+const linkIcon = computed(() => (route.name === 'index' ? 'target' : 'back'));
+</script>
 
 <style lang="scss" scoped>
 .app-header {

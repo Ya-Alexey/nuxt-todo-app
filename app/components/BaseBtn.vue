@@ -68,6 +68,10 @@ const classes = computed(() => ({
     opacity: 0.5;
     cursor: default;
   }
+  &:focus-visible {
+    outline: 1px solid var(--text-color);
+    outline-offset: 2px;
+  }
   &--theme-action {
     --text-color: var(--a-10);
     --border-color: var(--a-15);

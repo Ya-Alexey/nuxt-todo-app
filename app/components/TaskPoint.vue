@@ -1,37 +1,29 @@
 <template>
-  <div class="task-point">
+  <div
+    class="task-point"
+    :class="classes"
+  >
     <BaseCheckbox
-      v-model="checked"
+      :model-value="point.checked"
       :is-disabled="isDisabled"
       class="task-point__main"
     >
-      Описание задачи Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-      Officia, nihil!
+      {{ point.title }}
     </BaseCheckbox>
 
-    <!-- <div class="task-point__controls">
-      <BaseBtn theme="action">
-        <template #icon>
-          <SvgIcon name="edit" />
-        </template>
-        Редактировать
-      </BaseBtn>
-
-      <BaseBtn theme="danger">
-        <template #icon>
-          <SvgIcon name="delete" />
-        </template>
-        Удалить
-      </BaseBtn>
-    </div> -->
+    <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
 const { isDisabled = false } = defineProps<{
   isDisabled?: boolean;
+  point: TaskPoint;
 }>();
-const checked = ref(false);
+
+const classes = computed(() => ({
+  'task-point--is-disabled': isDisabled,
+}));
 </script>
 
 <style lang="scss" scoped>
@@ -42,17 +34,6 @@ const checked = ref(false);
   overflow: hidden;
   &__main {
     padding: 8px;
-  }
-  &__controls {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 12px;
-    padding: 10px 8px;
-    @include media('min640') {
-      display: flex;
-      justify-content: flex-end;
-      column-gap: 16px;
-    }
   }
 }
 </style>
