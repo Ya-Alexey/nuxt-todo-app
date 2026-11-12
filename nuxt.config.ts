@@ -14,6 +14,10 @@ export default defineNuxtConfig({
           name: 'format-detection',
           content: 'telephone=no, address=no, email=no, date=no',
         },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content',
+        },
       ],
       link: [],
     },
@@ -39,11 +43,7 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: 'build',
   },
-  modules: [
-    'nuxt-svg-sprite-icon',
-    '@pinia/nuxt',
-    ...(isDev ? ['@nuxt/eslint', '@nuxtjs/html-validator'] : []),
-  ],
+  modules: ['nuxt-svg-sprite-icon', '@pinia/nuxt', ...(isDev ? ['@nuxt/eslint', '@nuxtjs/html-validator'] : [])],
   svgSprite: {
     input: './app/assets/sprite/svg',
     output: './app/assets/sprite/gen',

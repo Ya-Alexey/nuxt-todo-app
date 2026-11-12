@@ -38,15 +38,19 @@
         Удалить
       </BaseBtn>
 
-      <Transition name="base-fade">
-        <LazyConfirmModal
+      <Transition
+        name="base-fade"
+        @after-leave="resetBodyStyle()"
+        @before-enter="freezeScroll()"
+      >
+        <LazyModalConfirm
           v-if="isShowConfirm"
           :is-active="isShowConfirm"
           @update:is-active="toggleConfirm"
           @success="$emit('removeTask')"
         >
           Вы действительно хотите удалить задачку?
-        </LazyConfirmModal>
+        </LazyModalConfirm>
       </Transition>
     </div>
   </div>
@@ -61,8 +65,7 @@ defineEmits<{
   removeTask: [];
 }>();
 
-const { isActive: isShowConfirm, toggleState: toggleConfirm } =
-  useActiveState();
+const { isActive: isShowConfirm, toggleState: toggleConfirm } = useActiveState();
 </script>
 
 <style lang="scss" scoped>

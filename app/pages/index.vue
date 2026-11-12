@@ -10,7 +10,7 @@
         v-for="(task, idx) in taskList"
         :key="task.id"
         :task="task"
-        @remove-task="removeTask(idx)"
+        @remove-task="removeTaskByIndex(idx)"
       />
     </div>
 
@@ -33,7 +33,7 @@
 const router = useRouter();
 const taskStore = useTaskStore();
 const { tasks: taskList } = storeToRefs(taskStore);
-const { removeTask, addTask } = taskStore;
+const { removeTaskByIndex, addTask } = taskStore;
 
 const pageTitle = computed(() => {
   if (taskList.value.length > 0) {
@@ -61,6 +61,7 @@ function createTask() {
   &__title {
     margin: 16px 0 24px;
     font-size: 22px;
+    font-weight: 600;
   }
   &__grid {
     display: grid;

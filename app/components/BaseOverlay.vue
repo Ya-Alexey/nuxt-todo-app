@@ -25,7 +25,8 @@ defineEmits<{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(76, 79, 83, 0.4);
+  background-color: rgba(76, 79, 83, 0.6);
   z-index: var(--z-base-popup);
+  backdrop-filter: blur(1px);
 }
 </style>

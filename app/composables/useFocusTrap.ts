@@ -21,9 +21,7 @@ function getFocusableElements(container: HTMLElement): HTMLElement[] {
   if (!container) {
     return [];
   }
-  const elements = Array.from(
-    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-  );
+  const elements = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
   return elements.filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0);
 }
 
@@ -63,10 +61,7 @@ export const useFocusTrap = (
     if (containerElVal.value) {
       containerElVal.value.removeEventListener('keydown', handleKeyDown);
     }
-    if (
-      previousFocusedElement &&
-      typeof previousFocusedElement.focus === 'function'
-    ) {
+    if (previousFocusedElement && typeof previousFocusedElement.focus === 'function') {
       previousFocusedElement.focus();
       previousFocusedElement = null;
     }

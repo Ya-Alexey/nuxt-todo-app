@@ -1,5 +1,5 @@
 <template>
-  <BaseOverlay @click-overaly="onClose()">
+  <BaseOverlay>
     <BaseConfirm
       ref="confirmEl"
       @reject="onClose()"
@@ -11,8 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-const CONFIRM_MODAL_ID = 'confirm-modal-id';
-
 const emit = defineEmits<{
   success: [];
 }>();
@@ -27,22 +25,12 @@ useFocusTrap(() => confirmEl.value?.$el, {
   focusFirstEl: true,
 });
 
-const { register, unregister } = useOverlayManager();
-
-const modalOverlay = {
-  id: CONFIRM_MODAL_ID,
+useRegisterOverlay({
+  id: 'modal-point-title',
   type: 'modal',
   close: onClose,
   closeOnRouteChange: true,
   contentElement: () => confirmEl.value?.$el,
-} as const satisfies OverlayInstance;
-
-onBeforeUnmount(() => {
-  unregister(CONFIRM_MODAL_ID);
-});
-
-onMounted(() => {
-  register(modalOverlay);
 });
 
 function onClose() {
