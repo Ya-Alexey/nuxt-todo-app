@@ -12,8 +12,15 @@
         :is-required="true"
         :is-valid="isValidTitle"
         placeholder="Описание вашей TODO-шки"
+        :has-inner-outline="true"
       />
       <div class="modal-textarea__controls">
+        <div
+          v-if="$slots.default"
+          class="modal-textarea__warn"
+        >
+          <slot></slot>
+        </div>
         <BaseBtn
           theme="action"
           :disabled="!isValidTitle"
@@ -80,7 +87,6 @@ function onSave() {
   justify-content: flex-start;
   overscroll-behavior: contain;
   .modal-textarea__input {
-    border: none;
     display: flex;
     flex-direction: column;
     row-gap: 8px;
@@ -95,12 +101,18 @@ function onSave() {
     background-color: var(--n-10);
     padding: 16px 8px;
     border-radius: 8px;
-    box-shadow: 0 1px 2px #3f7ac233;
+    box-shadow: 0 2px 6px #1b5ee566;
   }
   &__controls {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 8px;
+    row-gap: 8px;
+  }
+  &__warn {
+    grid-column: 1/-1;
+    color: var(--a-30);
+    font-size: 12px;
   }
 }
 </style>

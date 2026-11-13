@@ -19,7 +19,7 @@
       <BaseBtn
         v-if="canDeletePoint"
         theme="danger"
-        @click="$emit('removePoint')"
+        @click="emit('removePoint')"
       >
         <template #icon>
           <SvgIcon name="delete" />
@@ -37,26 +37,49 @@
         v-if="isShowModal"
         :title="point.title"
         @save="saveTitle"
-        @cancel="toggleModal(false)"
-      />
+        @cancel="onCancelModal()"
+      >
+        <template
+          v-if="unsavePoint"
+          #default
+        >
+          TODO-шечка не сохранена!
+          <br />
+          При отмене изменений будет удалена!
+        </template>
+      </ModalTextarea>
     </Transition>
   </TaskPoint>
 </template>
 
 <script lang="ts" setup>
-const { isDisabled = false } = defineProps<{
+const { isDisabled = false, unsavePoint = false } = defineProps<{
   isDisabled?: boolean;
   point: TaskPoint;
   canDeletePoint?: boolean;
+  unsavePoint?: boolean;
 }>();
 
 const emit = defineEmits<{
   removePoint: [];
+  removeUnsavePoint: [];
   updateTitle: [title: TaskPoint['title']];
   updateChecked: [title: TaskPoint['checked']];
 }>();
 
 const { isActive: isShowModal, toggleState: toggleModal } = useActiveState();
+
+watch(
+  () => unsavePoint,
+  (isStart) => {
+    if (isStart) {
+      toggleModal(true);
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 
 function saveTitle(newTitle: TaskPoint['title']) {
   emit('updateTitle', newTitle);
@@ -65,6 +88,14 @@ function saveTitle(newTitle: TaskPoint['title']) {
 
 function onUpdateChecked(newValue: boolean) {
   emit('updateChecked', newValue);
+}
+
+function onCancelModal() {
+  if (unsavePoint) {
+    emit('removeUnsavePoint');
+    return;
+  }
+  toggleModal(false);
 }
 </script>
 

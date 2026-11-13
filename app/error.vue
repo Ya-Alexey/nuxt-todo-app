@@ -9,7 +9,7 @@
         tag="NuxtLink"
         to="/"
       >
-        Главная страница
+        Вернутся на главную
       </BaseBtn>
     </div>
   </NuxtLayout>
@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 const errorList = {
   notFound: {
-    message: 'Похоже вы сбились с пути',
+    message: 'Похоже такой странички нет...',
   },
   other: {
     message: 'Что-то пошло не так...',

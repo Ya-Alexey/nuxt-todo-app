@@ -5,7 +5,7 @@
   >
     <div class="limit-message__count">
       <span class="limit-message__current">{{ currentValueLength }}</span>
-      / {{ limitValue }} символов
+      / {{ limitValue }}
     </div>
   </div>
 </template>

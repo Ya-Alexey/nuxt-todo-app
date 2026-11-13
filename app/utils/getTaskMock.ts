@@ -4,6 +4,8 @@ export function getTaskMock(): Task[] {
       id: 'task-1',
       title: 'Подготовка к недельному спринту',
       status: 'saved',
+      createdAt: '16.06.2026, 09:30:00',
+      updatedAt: '16.06.2026, 09:30:00',
       list: [
         { id: 'tp-1-1', title: 'Провести ревью бэклога', checked: true },
         { id: 'tp-1-2', title: 'Сформировать цели спринта', checked: true },
@@ -18,6 +20,8 @@ export function getTaskMock(): Task[] {
       id: 'task-2',
       title: 'Запуск рекламной кампании',
       status: 'saved',
+      createdAt: '16.06.2026, 09:30:00',
+      updatedAt: '16.06.2026, 09:30:00',
       list: [
         {
           id: 'tp-2-1',
@@ -41,6 +45,8 @@ export function getTaskMock(): Task[] {
       id: 'task-3',
       title: 'Обновление документации проекта',
       status: 'saved',
+      createdAt: '16.06.2026, 09:30:00',
+      updatedAt: '16.06.2026, 09:30:00',
       list: [
         {
           id: 'tp-3-1',

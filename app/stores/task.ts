@@ -1,7 +1,9 @@
-import { defineStore } from 'pinia';
+import { defineStore, skipHydrate } from 'pinia';
 
 export const useTaskStore = defineStore('Task', () => {
-  const tasks = shallowRef<Task[]>(getTaskMock());
+  const tasks = useLocalStorage('task', getTaskMock(), {
+    validate: isTaskArray,
+  });
 
   function removeTaskByIndex(taskIndex: number) {
     const [updatedList] = removeItemByIdx(tasks.value, taskIndex);
@@ -21,10 +23,13 @@ export const useTaskStore = defineStore('Task', () => {
   }
 
   function addTask() {
+    const date = getRuLocaleDate();
     const task: Task = {
       id: generateId(),
       title: 'Новая задачка',
       status: 'draft',
+      createdAt: date,
+      updatedAt: date,
       list: [createTaskPoint()],
     };
 
@@ -51,7 +56,7 @@ export const useTaskStore = defineStore('Task', () => {
   }
 
   return {
-    tasks,
+    tasks: skipHydrate(tasks),
     getTaskById,
     removeTaskByIndex,
     removeTaskById,

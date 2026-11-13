@@ -29,11 +29,13 @@ const {
   isRequired = false,
   isValid = false,
   limitValue = undefined,
+  hasInnerOutline = false,
 } = defineProps<{
   placeholder?: string;
   limitValue?: number;
   isRequired?: boolean;
   isValid?: boolean;
+  hasInnerOutline?: boolean;
 }>();
 
 const textareaValue = defineModel<string>('textareaValue', {
@@ -43,6 +45,7 @@ const textareaValue = defineModel<string>('textareaValue', {
 const classes = computed(() => ({
   'field-textarea--is-required': isRequired,
   'field-textarea--is-valid': isRequired && isValid,
+  'field-textarea--has-outline': hasInnerOutline,
 }));
 
 function onFocusOut() {
@@ -57,6 +60,18 @@ function onFocusOut() {
   --color-mark: transparent;
   border-radius: 8px;
   border: 1px solid var(--n-20);
+  @include transition-default(border-color);
+  &:has(textarea:focus) {
+    border-color: var(--a-10);
+  }
+  &--has-outline {
+    border: none;
+    .field-textarea__inner {
+      &:has(textarea:focus) {
+        outline: 1px solid var(--a-10);
+      }
+    }
+  }
   &--is-required {
     --color-mark: var(--a-30);
   }

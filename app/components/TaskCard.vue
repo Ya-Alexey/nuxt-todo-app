@@ -66,6 +66,10 @@ defineEmits<{
 }>();
 
 const { isActive: isShowConfirm, toggleState: toggleConfirm } = useActiveState();
+
+onBeforeUnmount(() => {
+  resetBodyStyle();
+});
 </script>
 
 <style lang="scss" scoped>

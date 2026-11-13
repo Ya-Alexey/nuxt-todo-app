@@ -4,28 +4,33 @@
       <Title>Nuxt Todo App</Title>
     </Head>
 
-    <div class="main-page__title">{{ pageTitle }}</div>
-    <div class="main-page__grid">
-      <TaskCard
-        v-for="(task, idx) in taskList"
-        :key="task.id"
-        :task="task"
-        @remove-task="removeTaskByIndex(idx)"
-      />
-    </div>
+    <ClientOnly>
+      <template #fallback>
+        <div class="app-loader"></div>
+      </template>
+      <div class="main-page__title">{{ pageTitle }}</div>
+      <div class="main-page__grid">
+        <TaskCard
+          v-for="(task, idx) in taskList"
+          :key="task.id"
+          :task="task"
+          @remove-task="removeTaskByIndex(idx)"
+        />
+      </div>
 
-    <div class="main-page__controls">
-      <BaseBtn
-        class="main-page__create"
-        theme="action"
-        @click="createTask()"
-      >
-        <template #icon>
-          <SvgIcon name="add" />
-        </template>
-        Создать задачку
-      </BaseBtn>
-    </div>
+      <div class="main-page__controls">
+        <BaseBtn
+          class="main-page__create"
+          theme="action"
+          @click="createTask()"
+        >
+          <template #icon>
+            <SvgIcon name="add" />
+          </template>
+          Создать задачку
+        </BaseBtn>
+      </div>
+    </ClientOnly>
   </main>
 </template>
 

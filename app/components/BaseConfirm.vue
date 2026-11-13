@@ -41,7 +41,7 @@ defineEmits<{
   border: 1px solid var(--n-20);
   background-color: var(--n-10);
   border-radius: 8px;
-  box-shadow: 0 1px 2px #3f7ac233;
+  box-shadow: 0 2px 6px #1b5ee566;
   &__controls {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

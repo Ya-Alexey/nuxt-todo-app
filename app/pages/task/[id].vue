@@ -1,76 +1,68 @@
 <template>
   <div class="task-page">
-    <template v-if="currentTask">
-      <Head>
-        <Title>Todo App | {{ currentTask.title }}</Title>
-      </Head>
-
-      <FieldTextarea
-        v-model:textarea-value="currentTask.title"
-        class="task-page__title"
-        :limit-value="MAX_TEXT_FIELD_LENGTH"
-        :is-required="true"
-        :is-valid="isValidTitle"
-        placeholder="Введите название задачки"
-      />
-
-      <div class="task-page__list">
-        <EditablePoint
-          v-for="(point, idx) in currentTask.list"
-          :key="point.id"
-          :point="point"
-          :can-delete-point="canDeletePoint"
-          @remove-point="
-            showConfirm({
-              name: 'point',
-              index: idx,
-            })
-          "
-          @update-title="onUpdatePoint({ title: $event }, idx)"
-          @update-checked="onUpdatePoint({ checked: $event }, idx)"
+    <Head>
+      <Title>Todo App | {{ pageTitle }}</Title>
+    </Head>
+    <ClientOnly>
+      <template #fallback>
+        <div class="app-loader"></div>
+      </template>
+      <template v-if="currentTask">
+        <FieldTextarea
+          v-model:textarea-value="currentTask.title"
+          class="task-page__title"
+          :limit-value="MAX_TEXT_FIELD_LENGTH"
+          :is-required="true"
+          :is-valid="isValidTitle"
+          placeholder="Введите название задачки"
         />
-      </div>
 
-      <BaseBtn
-        theme="action"
-        @click="addNewPoint()"
-      >
-        <template #icon>
-          <SvgIcon name="add" />
-        </template>
-        Добавить TODO-шку
-      </BaseBtn>
+        <div class="task-page__list">
+          <EditablePoint
+            v-for="(point, idx) in currentTask.list"
+            :key="point.id"
+            :point="point"
+            :can-delete-point="canDeletePoint"
+            :unsave-point="point.id === createdPointId"
+            @remove-point="
+              showConfirm({
+                name: 'point',
+                index: idx,
+              })
+            "
+            @remove-unsave-point="removeUnsavePoint(idx)"
+            @update-title="onUpdatePoint({ title: $event }, idx)"
+            @update-checked="onUpdatePoint({ checked: $event }, idx)"
+          />
+        </div>
 
-      <div class="task-page__bottom">
         <BaseBtn
-          class="task-page__btn"
+          class="task-page__add"
           theme="action"
-          :disabled="!isValidTitle"
-          @click="onSaveTask()"
+          @click="addNewPoint()"
         >
-          Сохранить
+          <template #icon>
+            <SvgIcon name="add" />
+          </template>
+          Добавить TODO-шку
         </BaseBtn>
 
-        <BaseBtn
-          class="task-page__btn"
-          theme="action"
-        >
-          Отменить
-        </BaseBtn>
-        <BaseBtn
-          class="task-page__btn"
-          theme="danger"
-          @click="
+        <TaskContols
+          class="task-page__bottom"
+          :can-save="isValidTitle"
+          @save="saveTask()"
+          @reset="resetTask()"
+          @delete="
             showConfirm({
               name: 'task',
               id: currentTask!.id,
             })
           "
         >
-          Удалить
-        </BaseBtn>
-      </div>
-    </template>
+          {{ currentTask.updatedAt }}
+        </TaskContols>
+      </template>
+    </ClientOnly>
 
     <Transition
       name="base-fade"
@@ -90,16 +82,24 @@
 </template>
 
 <script lang="ts" setup>
+const isClient = import.meta.client;
 const route = useRoute();
-const router = useRouter();
 const taskStore = useTaskStore();
-const { removeTaskById, updateTaskById, createTaskPoint, getTaskById } = taskStore;
+const { getTaskById } = taskStore;
 
 const currentTask = ref<Task | null>(null);
+const createdPointId = ref<TaskPoint['id'] | null>(null);
+const pageTitle = computed(() => currentTask.value?.title || 'Просмотр задачки');
+
+const { isValidTitle, removeTask, removePoint, updatePoint, createNewPoint, saveTask, resetTask, initTask } =
+  useTaskEditAction(currentTask);
 
 watch(
   () => route.params.id,
   (newId) => {
+    if (!isClient) {
+      return;
+    }
     const task = getTaskById(newId as string);
     if (!task) {
       throw createError({
@@ -108,17 +108,12 @@ watch(
         fatal: true,
       });
     }
-    currentTask.value = task;
+    initTask(task);
   },
   {
     immediate: true,
   },
 );
-
-const isValidTitle = useValidInput(() => currentTask.value?.title || '', {
-  maxLength: MAX_TEXT_FIELD_LENGTH,
-  minLength: 2,
-});
 
 const canDeletePoint = computed(() => {
   const pointsLength = currentTask.value?.list.length || 0;
@@ -144,47 +139,22 @@ function onSuccessConfirm() {
     removeTask(target.id);
     return;
   }
-  onRemovePoint(target.index);
-}
-
-function removeTask(taskId: Task['id']) {
-  removeTaskById(taskId);
-  router.push({
-    name: 'index',
-  });
-}
-
-function onRemovePoint(index: number) {
-  const [updatedList] = removeItemByIdx(currentTask.value!.list, index);
-  currentTask.value!.list = updatedList;
-}
-
-function onUpdatePoint(newPoint: Partial<TaskPoint>, pointIdx: number) {
-  const taskvalue = currentTask.value;
-  if (!taskvalue) {
-    return;
-  }
-  const taskList = taskvalue.list;
-  const updatedPoint = { ...taskList[pointIdx]!, ...newPoint };
-  const [updatedList] = replaceItemByIdx(taskList, pointIdx, updatedPoint);
-  taskvalue.list = updatedList;
+  removePoint(target.index);
 }
 
 function addNewPoint() {
-  const taskvalue = currentTask.value;
-  if (!taskvalue) {
-    return;
-  }
-  const point = createTaskPoint();
-  const [updatedList] = insertNewItem(taskvalue.list, point);
-  taskvalue.list = updatedList;
+  const point = createNewPoint();
+  createdPointId.value = point?.id || null;
 }
 
-function onSaveTask() {
-  if (!isValidTitle || !currentTask.value) {
-    return;
-  }
-  updateTaskById(currentTask.value);
+function onUpdatePoint(newPoint: Partial<TaskPoint>, pointIdx: number) {
+  createdPointId.value = null;
+  updatePoint(newPoint, pointIdx);
+}
+
+function removeUnsavePoint(pointIndex: number) {
+  createdPointId.value = null;
+  removePoint(pointIndex);
 }
 </script>
 
@@ -217,22 +187,15 @@ function onSaveTask() {
       column-gap: 16px;
     }
   }
+  &__add {
+    margin-bottom: 32px;
+  }
   &__bottom {
     margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
-    column-gap: 8px;
-    padding: 16px 0;
     position: sticky;
     bottom: 0;
-    background-color: var(--n-00);
+    border-top: 1px solid var(--n-70);
     z-index: calc(var(--z-layout-sticky) - 1);
-  }
-  &__btn {
-    flex-grow: 1;
-    @include media('min800') {
-      flex-grow: initial;
-    }
   }
 }
 </style>

@@ -8,5 +8,7 @@ interface Task {
   id: string;
   title: string;
   status: 'draft' | 'saved';
+  createdAt: string;
+  updatedAt: string;
   list: TaskPoint[];
 }
