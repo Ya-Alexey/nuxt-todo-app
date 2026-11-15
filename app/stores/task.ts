@@ -27,7 +27,7 @@ export const useTaskStore = defineStore('Task', () => {
     const task: Task = {
       id: generateId(),
       title: 'Новая задачка',
-      status: 'draft',
+      status: 'saved',
       createdAt: date,
       updatedAt: date,
       list: [createTaskPoint()],

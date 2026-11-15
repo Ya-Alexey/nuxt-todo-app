@@ -3,7 +3,7 @@ export interface UseLocalStorageOptions<T> {
 }
 
 /**
- * Логика работы с localstorage в глобальном режиме, использовать без Pinia не рекомендуется
+ * Логика работы с localstorage
  */
 export const useLocalStorage = <T>(key: string, defaultValue: T, options?: UseLocalStorageOptions<T>) => {
   const isClient = import.meta.client;

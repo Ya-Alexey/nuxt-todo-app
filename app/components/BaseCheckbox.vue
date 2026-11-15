@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-const { isDisabled = false, isShortView = true } = defineProps<{
+const { isDisabled = false, isShortView = false } = defineProps<{
   isDisabled?: boolean;
   isShortView?: boolean;
 }>();
@@ -75,7 +75,6 @@ const classes = computed(() => ({
   }
   &__label {
     padding: 4px 0;
-    // padding-top: 8px;
   }
   &__control {
     width: 0;

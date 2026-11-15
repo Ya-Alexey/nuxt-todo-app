@@ -3,12 +3,23 @@
     <div class="task-card__title">{{ task.title }}</div>
 
     <div class="task-card__list">
-      <TaskPoint
-        v-for="point in task.list"
+      <template
+        v-for="(point, idx) in task.list"
         :key="point.id"
-        :is-disabled="true"
-        :point="point"
-      />
+      >
+        <TaskPoint
+          v-if="idx < MAX_VISIBLE_POINT_COUNT"
+          :is-disabled="true"
+          :point="point"
+          :is-short-view="true"
+        />
+      </template>
+      <div
+        v-if="countHiddenPoint > 0"
+        class="task-card__note"
+      >
+        И еще {{ countHiddenPoint }} шт.
+      </div>
     </div>
 
     <div class="task-card__controls">
@@ -57,7 +68,9 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const MAX_VISIBLE_POINT_COUNT = 2;
+
+const { task } = defineProps<{
   task: Task;
 }>();
 
@@ -66,6 +79,7 @@ defineEmits<{
 }>();
 
 const { isActive: isShowConfirm, toggleState: toggleConfirm } = useActiveState();
+const countHiddenPoint = computed(() => task.list.length - MAX_VISIBLE_POINT_COUNT);
 
 onBeforeUnmount(() => {
   resetBodyStyle();
@@ -87,6 +101,10 @@ onBeforeUnmount(() => {
   &__list {
     display: grid;
     row-gap: 8px;
+  }
+  &__note {
+    padding: 4px;
+    font-size: 14px;
   }
   &__controls {
     margin-top: auto;

@@ -28,4 +28,4 @@ function isTaskArray(data: unknown): data is Task[] {
   return Array.isArray(data) && data.every(isTask);
 }
 
-export { isTaskArray };
+export { isTaskArray, isTask };

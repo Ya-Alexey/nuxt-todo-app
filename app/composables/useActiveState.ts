@@ -1,6 +1,9 @@
+/**
+ * базовый isActive, плюс переключалки
+ */
 export const useActiveState = (initValue = false) => {
   const isActive = ref(initValue);
-  
+
   function toggleState(newState?: boolean) {
     if (typeof newState === 'boolean') {
       isActive.value = newState;
@@ -30,5 +33,5 @@ export const useActiveState = (initValue = false) => {
     toggleState,
     setActiveOff,
     setActiveOn,
-  }
-}
+  };
+};

@@ -65,9 +65,15 @@ const emit = defineEmits<{
   removeUnsavePoint: [];
   updateTitle: [title: TaskPoint['title']];
   updateChecked: [title: TaskPoint['checked']];
+  // Т.к. редактиирование получилось в своей модалке, отключаем в этот момент Keyboard историю
+  preventHistory: [isDisabled: boolean];
 }>();
 
 const { isActive: isShowModal, toggleState: toggleModal } = useActiveState();
+
+watch(isShowModal, (isShow) => {
+  emit('preventHistory', isShow);
+});
 
 watch(
   () => unsavePoint,

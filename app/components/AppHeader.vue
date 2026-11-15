@@ -25,13 +25,16 @@ const linkIcon = computed(() => (route.name === 'index' ? 'target' : 'back'));
   display: flex;
   align-items: center;
   column-gap: 16px;
-  padding: 16px;
+  padding: 8px 16px;
   position: sticky;
   top: 0;
   z-index: var(--z-layout-sticky);
   background-color: var(--n-10);
   box-shadow: 0 1px 2px #3f7ac233;
   border-radius: 0 0 8px 8px;
+  @include media('min640') {
+    padding: 16px;
+  }
   &__link {
     width: 32px;
     height: 32px;

@@ -1,13 +1,27 @@
 /**
  * Основные действия для редактирования задачки
  */
-export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
-  let originTask: Task | null = null;
+export const useTaskEditAction = (initTask: Task, isDisableKeyboardHandler?: Ref<boolean>) => {
   const router = useRouter();
   const taskStore = useTaskStore();
-  const { removeTaskById, updateTaskById, createTaskPoint } = taskStore;
+  const {
+    state: currentTask,
+    saveSnapshot,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    resetHistory,
+  } = useHistory(initTask, {
+    isDisableKeyboardHandler,
+  });
 
-  const isValidTitle = useValidInput(() => currentTask.value?.title || '', {
+  const { removeTaskById, updateTaskById, createTaskPoint } = taskStore;
+  let originTask: Task = deepCopyUsedJson(currentTask.value);
+
+  const debouncedTaskUpdate = createDebounceHandler(updateLocalTask);
+
+  const isValidTitle = useValidInput(() => currentTask.value.title, {
     maxLength: MAX_TEXT_FIELD_LENGTH,
     minLength: 2,
   });
@@ -20,8 +34,11 @@ export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
   }
 
   function removePoint(index: number) {
-    const [updatedList] = removeItemByIdx(currentTask.value!.list, index);
-    currentTask.value!.list = updatedList;
+    const [updatedList] = removeItemByIdx(currentTask.value.list, index);
+    updateLocalTask({
+      list: updatedList,
+      status: 'draft',
+    });
   }
 
   function updatePoint(newPoint: Partial<TaskPoint>, pointIdx: number) {
@@ -32,7 +49,10 @@ export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
     const taskList = taskvalue.list;
     const updatedPoint = { ...taskList[pointIdx]!, ...newPoint };
     const [updatedList] = replaceItemByIdx(taskList, pointIdx, updatedPoint);
-    taskvalue.list = updatedList;
+    updateLocalTask({
+      list: updatedList,
+      status: 'draft',
+    });
   }
 
   function createNewPoint() {
@@ -42,7 +62,10 @@ export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
     }
     const point = createTaskPoint();
     const [updatedList] = insertNewItem(taskvalue.list, point);
-    taskvalue.list = updatedList;
+    updateLocalTask({
+      list: updatedList,
+      status: 'draft',
+    });
     return point;
   }
 
@@ -55,9 +78,10 @@ export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
       status: 'saved',
       updatedAt: getRuLocaleDate(),
     };
-    currentTask.value = savedTask;
+    updateLocalTask(savedTask);
     updateTaskById(savedTask);
     updateOriginTask(savedTask);
+    resetHistory();
   }
 
   function updateOriginTask(task: Task) {
@@ -69,19 +93,28 @@ export const useTaskEditAction = (currentTask: Ref<Task | null>) => {
     saveTask();
   }
 
-  function initTask(task: Task) {
-    updateOriginTask(task);
-    currentTask.value = deepCopyUsedJson(task);
+  function updateLocalTask(newTask: Partial<Task>) {
+    currentTask.value = {
+      ...currentTask.value,
+      ...newTask,
+    };
+    saveSnapshot();
   }
 
   return {
     isValidTitle,
+    currentTask,
+    updateLocalTask,
     removeTask,
     removePoint,
     updatePoint,
     createNewPoint,
     saveTask,
     resetTask,
-    initTask,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    debouncedTaskUpdate,
   };
 };

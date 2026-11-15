@@ -19,7 +19,22 @@ export default defineNuxtConfig({
           content: 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content',
         },
       ],
-      link: [],
+      link: [
+        {
+          rel: 'preload',
+          href: '/fonts/Roboto-Regular.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous',
+        },
+        {
+          rel: 'preload',
+          href: '/fonts/Roboto-Bold.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous',
+        },
+      ],
     },
   },
   css: ['~/assets/styles/app.scss'],
@@ -47,5 +62,14 @@ export default defineNuxtConfig({
   svgSprite: {
     input: './app/assets/sprite/svg',
     output: './app/assets/sprite/gen',
+  },
+  $production: {
+    routeRules: {
+      '/fonts/**': {
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      },
+    },
   },
 });

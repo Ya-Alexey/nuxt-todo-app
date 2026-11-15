@@ -6,6 +6,7 @@
     <BaseCheckbox
       :model-value="point.checked"
       :is-disabled="isDisabled"
+      :is-short-view="isShortView"
       class="task-point__main"
       @update:model-value="onUpdateChecked"
     >
@@ -17,8 +18,9 @@
 </template>
 
 <script lang="ts" setup>
-const { isDisabled = false } = defineProps<{
+const { isDisabled = false, isShortView = false } = defineProps<{
   isDisabled?: boolean;
+  isShortView?: boolean;
   point: TaskPoint;
 }>();
 
