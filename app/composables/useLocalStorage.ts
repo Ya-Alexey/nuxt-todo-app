@@ -6,7 +6,7 @@ export interface UseLocalStorageOptions<T> {
  * Логика работы с localstorage
  */
 export const useLocalStorage = <T>(key: string, defaultValue: T, options?: UseLocalStorageOptions<T>) => {
-  const isClient = import.meta.client;
+  const isClient = import.meta.client && typeof window !== 'undefined';
 
   const state = shallowRef<T>(readValue()) as Ref<T>;
 

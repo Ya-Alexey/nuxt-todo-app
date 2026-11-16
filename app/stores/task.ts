@@ -16,9 +16,9 @@ export const useTaskStore = defineStore('Task', () => {
   }
 
   function updateTaskById(newTask: Task) {
-    const taskId = newTask.id;
-    const taskIndex = findTaskIndexById(taskId);
-    const [updatedList] = replaceItemByIdx(tasks.value, taskIndex, newTask);
+    const taskIndex = findTaskIndexById(newTask.id);
+    const [updatedList] =
+      taskIndex === -1 ? insertNewItem(tasks.value, newTask) : replaceItemByIdx(tasks.value, taskIndex, newTask);
     tasks.value = updatedList;
   }
 

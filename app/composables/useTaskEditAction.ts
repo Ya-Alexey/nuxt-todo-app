@@ -70,7 +70,7 @@ export const useTaskEditAction = (initTask: Task, isDisableKeyboardHandler?: Ref
   }
 
   function saveTask() {
-    if (!isValidTitle || !currentTask.value) {
+    if (!isValidTitle.value || !currentTask.value) {
       return;
     }
     const savedTask: Task = {
