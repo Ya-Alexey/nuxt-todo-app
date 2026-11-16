@@ -40,8 +40,8 @@ const classes = computed(() => ({
 
 <style lang="scss" scoped>
 .base-checkbox {
-  --bg-primary: var(--n-00);
-  --bg-box: var(--n-10);
+  --bg-primary: var(--n-10);
+  --bg-box: var(--n-20);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -52,7 +52,7 @@ const classes = computed(() => ({
   background-color: var(--bg-primary);
   @include transition-default(background-color);
   @include mediaHover {
-    --bg-primary: var(--n-10);
+    --bg-primary: var(--n-20);
     --bg-box: var(--n-00);
   }
   &--is-checked {
@@ -70,7 +70,7 @@ const classes = computed(() => ({
   }
   &.base-checkbox--is-disabled {
     cursor: default;
-    --bg-primary: var(--n-00);
+    --bg-primary: var(--n-10);
     --bg-box: var(--n-10);
   }
   &__label {

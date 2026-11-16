@@ -46,6 +46,7 @@ function onUpdateChecked(newValue: boolean) {
   border-radius: 8px;
   display: grid;
   overflow: hidden;
+  background-color: var(--n-10);
   &__main {
     padding: 8px;
   }

@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build: .
+    container_name: nuxt_todo_app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
